@@ -1,333 +1,556 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Сергей Саламатов · Application Support</title>
-  <meta name="description" content="Сергей Саламатов: 14 лет в ИТ, Application Support и Application Manager. Автоматизация и сайты с помощью ИИ.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сергей Саламатов — Application Support</title>
+<meta name="description" content="Сергей Саламатов — Application Support / Application Manager. 14 лет в IT, Citibank, интеграции со СМЭВ, MS SQL. Тюмень, удалённо.">
+<meta name="theme-color" content="#0b0c0c">
+<meta property="og:title" content="Сергей Саламатов — Application Support">
+<meta property="og:description" content="14 лет в IT, Citibank, интеграции со СМЭВ, MS SQL. Тюмень, удалённо.">
+<meta property="og:image" content="https://ssalamatov72-ai.github.io/Photos/robot-hero.png">
+<link rel="preload" as="image" href="Photos/robot-hero.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0c0c;
+    --bg-2: #1b1f1f;
+    --ink: #f2f2f0;
+    --ink-2: #a7aaa8;
+    --ink-3: #5c605e;
+    --line: rgba(255,255,255,.16);
+    --glow: #ffffff;
+    --display: "Oswald", "Arial Narrow", sans-serif;
+    --body: "Manrope", system-ui, sans-serif;
+    --gutter: clamp(16px, 4vw, 56px);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.55;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  /* film grain */
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 100; opacity: .07;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* full-page shader background: liquid metal + stars */
+  #bg { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; display: block; pointer-events: none; }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 6px; }
+  .skip {
+    position: absolute; left: 16px; top: -60px; z-index: 200; padding: 10px 16px;
+    background: var(--ink); color: var(--bg); border-radius: 999px; font-weight: 600; transition: top .2s;
+  }
+  .skip:focus { top: 16px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .caps { text-transform: uppercase; font-size: 12px; letter-spacing: .04em; line-height: 1.5; color: var(--ink-2); }
+  .display { font-family: var(--display); font-weight: 700; text-transform: uppercase; line-height: .86; letter-spacing: -.01em; }
 
-  <style>
-    /* ===== 1. Цвета и базовые настройки ===== */
-    :root {
-      --bg: #0b0d1a;
-      --text: #eef0ff;
-      --muted: #a3a8c7;
-      --accent1: #7c5cff;   /* фиолетовый */
-      --accent2: #19d3c5;   /* бирюзовый */
-      --accent3: #ff6fb5;   /* розовый */
-      --glass: rgba(255, 255, 255, 0.06);
-      --glass-border: rgba(255, 255, 255, 0.12);
-    }
+  /* ---------- header ---------- */
+  header {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 28px var(--gutter);
+  }
+  .logo {
+    width: 44px; height: 44px; border-radius: 12px; background: var(--ink); color: var(--bg);
+    display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 19px; letter-spacing: -.02em;
+  }
+  nav { display: flex; gap: clamp(18px, 5vw, 72px); }
+  nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); transition: color .2s, text-shadow .2s; }
+  nav a:hover, nav a:first-child { color: var(--ink); text-shadow: 0 0 14px rgba(255,255,255,.7); }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* ---------- hero ---------- */
+  .hero {
+    position: relative; min-height: 100vh; min-height: 100svh;
+    padding: 120px var(--gutter) 40px;
+    background: radial-gradient(60% 70% at 62% 45%, rgba(42,47,47,.45) 0%, transparent 70%);
+    display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: 40px;
+    overflow: hidden;
+  }
+  .hero-side { display: flex; flex-direction: column; justify-content: space-around; gap: 36px; position: relative; z-index: 2; }
+  .side-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; color: var(--ink); text-transform: lowercase; }
+  /* light that trails the cursor across the hero */
+  .cursor-glow {
+    position: absolute; left: 0; top: 0; z-index: 0; width: 640px; height: 640px; margin: -320px 0 0 -320px;
+    border-radius: 50%; pointer-events: none; mix-blend-mode: screen;
+    background: radial-gradient(closest-side, rgba(255,255,255,.55), rgba(255,255,255,.22) 35%, rgba(255,255,255,.06) 65%, transparent);
+    opacity: 0; transition: opacity .4s ease; will-change: transform;
+  }
+  .hero.lit .cursor-glow { opacity: 1; }
+  .hero-main { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; }
+  .word {
+    display: flex; align-items: flex-end; justify-content: flex-end;
+    font-size: clamp(90px, 17vw, 300px);
+    margin-right: calc(var(--gutter) * -1 - .06em);
+    color: #d9dad8;
+    background: linear-gradient(180deg, #ffffff 10%, #8f9391 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    /* room for glyphs that overflow the tight line-height, otherwise background-clip cuts them */
+    padding: .12em 0; margin-top: -.12em; margin-bottom: -.12em;
+  }
+  .word span { display: block; }
+  /* the "O": an empty slot with a soft light behind the robot's head */
+  .pill { width: .5em; height: .86em; margin: 0 .03em; flex: none; position: relative; z-index: 2; }
+  .pill::before {
+    content: ""; position: absolute; left: 50%; top: 42%; width: 1.1em; height: 1.1em; border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(closest-side, rgba(255,255,255,.9), rgba(255,255,255,.4) 38%, rgba(255,255,255,.1) 68%, transparent);
+    animation: halo 5s ease-in-out infinite;
+  }
+  /* brighter backlight that fades in when the robot is hovered */
+  .pill::after {
+    content: ""; position: absolute; left: 50%; top: 30%; width: 2em; height: 1.6em; border-radius: 50%;
+    transform: translate(-50%, -50%) scale(.85);
+    background: radial-gradient(closest-side, #fff, rgba(255,255,255,.75) 32%, rgba(255,255,255,.25) 64%, transparent);
+    opacity: 0; transition: opacity .5s ease, transform .6s cubic-bezier(.2,.8,.2,1);
+    pointer-events: none;
+  }
+  .robot {
+    position: absolute; z-index: 1; left: 50%; top: .2em; width: 1.45em; height: auto; max-width: none;
+    transform: translateX(-50%); user-select: none;
+    filter: saturate(.3) contrast(1.08);
+    transition: filter .5s ease;
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 96%);
+    mask-image: linear-gradient(to bottom, #000 62%, transparent 96%);
+  }
+  @keyframes halo { 50% { opacity: .75; } }
+  @media (hover: hover) {
+    .pill:hover::after { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .pill:hover .robot { filter: saturate(.3) contrast(1.08) drop-shadow(0 0 .03em rgba(255,255,255,.7)); }
+  }
 
-    body {
-      font-family: 'Manrope', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      overflow-x: hidden;
-      min-height: 100vh;
-    }
+  .hero-name { position: relative; z-index: 3; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; margin-top: 32px; }
+  .hero-name h1 { font-family: var(--display); font-weight: 500; font-size: clamp(28px, 3.4vw, 48px); text-transform: uppercase; line-height: 1; text-shadow: 0 2px 24px rgba(0,0,0,.8); }
+  .hero-name .caps { text-shadow: 0 1px 12px rgba(0,0,0,.9); }
+  .hero-name .btn { background: rgba(11,12,12,.55); backdrop-filter: blur(6px); }
+  .hero-name p { margin-top: 10px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 44px; padding: 11px 22px; border: 1.5px solid var(--ink); border-radius: 999px;
+    font-size: 13px; font-weight: 600; white-space: nowrap;
+    transition: background .2s, color .2s, box-shadow .2s;
+  }
+  .btn:hover, .hero-name .btn:hover { background: var(--ink); color: var(--bg); box-shadow: 0 0 30px rgba(255,255,255,.35); }
+  .btn:active { transform: scale(.97); }
+  .btn svg { width: 14px; height: 14px; }
+  .btn.solid { background: var(--ink); color: var(--bg); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: #7dff9b; box-shadow: 0 0 10px #7dff9b; }
 
-    /* ===== 2. Плавающие светящиеся пятна на фоне ===== */
-    .blob {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.55;
-      z-index: 0;
-      pointer-events: none;
-    }
-    .blob.b1 { width: 420px; height: 420px; background: var(--accent1); top: -120px; left: -100px; animation: drift1 18s ease-in-out infinite; }
-    .blob.b2 { width: 360px; height: 360px; background: var(--accent2); bottom: -120px; right: -80px; animation: drift2 22s ease-in-out infinite; }
-    .blob.b3 { width: 280px; height: 280px; background: var(--accent3); top: 45%; left: 55%; opacity: 0.35; animation: drift3 26s ease-in-out infinite; }
+  /* ---------- about ---------- */
+  .about {
+    position: relative; padding: 120px var(--gutter);
+    background: radial-gradient(45% 50% at 55% 40%, rgba(30,34,34,.5), transparent 70%);
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; row-gap: 40px;
+    overflow: hidden;
+  }
+  .t-big { font-size: clamp(64px, 11vw, 180px); }
+  .t-what { grid-column: 7 / 12; grid-row: 1; color: #3a3e3d; justify-self: center; }
+  .t-i { grid-column: 2 / 5; grid-row: 2; color: #3a3e3d; align-self: end; }
+  .t-do { grid-column: 5 / 8; grid-row: 2; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,.8), 0 0 60px rgba(255,255,255,.4); align-self: end; }
+  .t-q { grid-column: 11 / 13; grid-row: 3; color: #3a3e3d; justify-self: end; }
+  .t-big.white { grid-column: 7 / 12; grid-row: 3; color: #e8e8e6; }
+  .about-text { grid-column: 7 / 12; grid-row: 4; font-size: 14px; text-transform: uppercase; letter-spacing: .02em; line-height: 1.45; font-weight: 500; }
+  .about-text p + p { margin-top: 14px; }
+  .about-note { text-align: right; max-width: 400px; justify-self: end; }
+  .about-note h3 { font-size: 20px; font-weight: 500; margin-bottom: 6px; }
+  .n1 { grid-column: 1 / 6; grid-row: 3; align-self: start; }
+  .n2 { grid-column: 1 / 6; grid-row: 4; align-self: end; }
+  .n3 { grid-column: 9 / 13; grid-row: 5; text-align: left; justify-self: start; }
 
-    @keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(120px, 90px) scale(1.15); } }
-    @keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-140px, -70px) scale(1.1); } }
-    @keyframes drift3 { 0%,100% { transform: translate(0,0); } 33% { transform: translate(-160px, 60px); } 66% { transform: translate(80px, -100px); } }
+  /* ---------- experience ---------- */
+  .exp { padding: 100px var(--gutter) 120px; border-top: 1px solid var(--line); }
+  .sec-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 48px; flex-wrap: wrap; }
+  .sec-head h2 { font-size: clamp(56px, 9vw, 140px); }
+  .row {
+    display: grid; grid-template-columns: 220px 1fr 1.3fr; gap: 24px;
+    padding: 28px 0; border-top: 1px solid var(--line);
+    transition: background .3s;
+  }
+  .row:last-child { border-bottom: 1px solid var(--line); }
+  .row:hover .years { color: #fff; text-shadow: 0 0 18px rgba(255,255,255,.6); }
+  .years { font-family: var(--display); font-weight: 500; font-size: 30px; line-height: 1; color: var(--ink-3); transition: color .3s, text-shadow .3s; }
+  .row h3 { font-size: 20px; font-weight: 600; line-height: 1.2; }
+  .row .role { margin-top: 6px; }
+  .row ul { list-style: none; display: grid; gap: 8px; color: var(--ink-2); }
+  .row li { padding-left: 16px; position: relative; }
+  .row li::before { content: ""; position: absolute; left: 0; top: .7em; width: 6px; height: 1px; background: var(--ink-2); }
 
-    /* ===== 3. Мелкие частицы, которые поднимаются вверх ===== */
-    .particle {
-      position: fixed;
-      bottom: -10px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.7);
-      z-index: 0;
-      pointer-events: none;
-      animation: rise linear infinite;
-    }
-    @keyframes rise {
-      from { transform: translateY(0); opacity: 0; }
-      10%  { opacity: 0.8; }
-      90%  { opacity: 0.6; }
-      to   { transform: translateY(-110vh); opacity: 0; }
-    }
+  /* ---------- skills / cta ---------- */
+  .cta {
+    position: relative; min-height: 100vh; padding: 100px var(--gutter);
+    background: radial-gradient(40% 40% at 50% 50%, rgba(28,31,31,.5), transparent 80%);
+    overflow: hidden; display: grid; place-items: center;
+  }
+  .cta::before {
+    content: ""; position: absolute; left: 50%; top: 0; width: 2px; height: 22%;
+    background: linear-gradient(transparent, rgba(255,255,255,.6)); filter: blur(1px);
+  }
+  .mark {
+    position: relative; width: min(52vw, 440px); aspect-ratio: 1 / .92; border-radius: 22%;
+    background: #fff;
+    box-shadow: 0 0 40px #fff, 0 0 120px rgba(255,255,255,.55), 0 0 260px rgba(255,255,255,.25);
+    display: grid; place-items: center;
+    animation: breathe2 6s ease-in-out infinite;
+  }
+  .mark::before, .mark::after {
+    content: ""; position: absolute; top: 18%; bottom: 0; width: 13%; border-radius: 999px 999px 0 0; background: #d9dcdb;
+  }
+  .mark::before { left: 30%; } .mark::after { right: 30%; }
+  @keyframes breathe2 { 50% { box-shadow: 0 0 50px #fff, 0 0 160px rgba(255,255,255,.65), 0 0 320px rgba(255,255,255,.3); } }
+  .cta-title {
+    position: absolute; left: 50%; top: 50%; transform: translate(-42%, -10%); z-index: 3;
+    font-size: clamp(52px, 9vw, 150px); color: #fff; mix-blend-mode: difference; white-space: nowrap;
+  }
+  .skill {
+    position: absolute; z-index: 2; font-family: var(--display); font-weight: 700; text-transform: uppercase;
+    font-size: clamp(18px, 2.3vw, 34px); line-height: .95; color: #e6e6e4;
+  }
+  .skill.r { text-align: right; }
+  .s1 { left: 8%; top: 12%; } .s2 { right: 7%; top: 16%; } .s3 { left: 2%; top: 44%; }
+  .s4 { right: 3%; top: 50%; } .s5 { left: 5%; bottom: 10%; } .s6 { right: 8%; bottom: 18%; }
+  .s7 { left: 18%; top: 28%; color: var(--ink-3); } .s8 { right: 18%; bottom: 6%; color: var(--ink-3); }
 
-    /* ===== 4. Основной контейнер ===== */
-    main {
-      position: relative;
-      z-index: 1;
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 0 20px 80px;
-    }
+  .contact { padding: 40px var(--gutter) 100px; text-align: center; }
+  .contact .caps { max-width: 520px; margin: 0 auto 28px; }
+  .contact-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
 
-    /* ===== 5. Первый экран ===== */
-    .hero {
-      min-height: 92vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      gap: 22px;
-    }
+  footer {
+    display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+    padding: 24px var(--gutter); border-top: 1px solid var(--line);
+  }
 
-    .avatar {
-      width: 120px; height: 120px;
-      border-radius: 50%;
-      display: grid; place-items: center;
-      font-size: 42px; font-weight: 800;
-      background: linear-gradient(135deg, var(--accent1), var(--accent2));
-      box-shadow: 0 0 60px rgba(124, 92, 255, 0.55);
-      animation: float 6s ease-in-out infinite;
-    }
+  /* reveal */
+  .rv { opacity: 0; transform: translateY(24px); transition: opacity .9s ease, transform .9s ease; }
+  .rv.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .rv { opacity: 1; transform: none; transition: none; }
+    .pill::before, .mark { animation: none; }
+    html { scroll-behavior: auto; }
+  }
 
-    @keyframes float {
-      0%,100% { transform: translateY(0); }
-      50%     { transform: translateY(-14px); }
-    }
-
-    .badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      font-size: 14px; color: var(--muted);
-    }
-    .badge .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #3ddc84;
-      box-shadow: 0 0 10px #3ddc84;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse { 50% { opacity: 0.35; } }
-
-    h1 {
-      font-size: clamp(36px, 7vw, 68px);
-      font-weight: 800;
-      line-height: 1.1;
-      background: linear-gradient(90deg, #fff, var(--accent2), var(--accent1), #fff);
-      background-size: 300% 100%;
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      animation: shine 8s linear infinite;
-    }
-    @keyframes shine { to { background-position: 300% 0; } }
-
-    .role {
-      font-size: clamp(17px, 2.6vw, 22px);
-      color: var(--muted);
-      min-height: 1.6em;
-    }
-    .role .typed { color: var(--text); font-weight: 700; }
-    .cursor { display: inline-block; width: 2px; height: 1.1em; background: var(--accent2); vertical-align: -3px; margin-left: 3px; animation: blink 1s step-end infinite; }
-    @keyframes blink { 50% { opacity: 0; } }
-
-    .buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 6px; }
-    .btn {
-      padding: 12px 22px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 700;
-      color: var(--text);
-      border: 1px solid var(--glass-border);
-      background: var(--glass);
-      transition: transform .25s, box-shadow .25s, background .25s;
-    }
-    .btn.primary { background: linear-gradient(135deg, var(--accent1), var(--accent2)); border: none; }
-    .btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(124, 92, 255, 0.4); }
-
-    .scroll-hint { margin-top: 30px; color: var(--muted); font-size: 13px; animation: float 3s ease-in-out infinite; }
-
-    /* ===== 6. Стеклянные карточки ===== */
-    h2 { font-size: 28px; margin-bottom: 20px; text-align: center; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
-      margin-bottom: 70px;
-    }
-
-    .card {
-      padding: 26px;
-      border-radius: 20px;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      transition: transform .3s, border-color .3s;
-    }
-    .card:hover { transform: translateY(-6px); border-color: rgba(25, 211, 197, 0.5); }
-
-    /* каждая карточка «парит» со своей задержкой */
-    .grid .card:nth-child(1) { animation: float 7s ease-in-out infinite; }
-    .grid .card:nth-child(2) { animation: float 7s ease-in-out infinite 1.2s; }
-    .grid .card:nth-child(3) { animation: float 7s ease-in-out infinite 2.4s; }
-
-    .card .icon { font-size: 30px; margin-bottom: 10px; }
-    .card h3 { font-size: 19px; margin-bottom: 8px; }
-    .card p { color: var(--muted); font-size: 15px; }
-
-    .tags { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 70px; }
-    .tag {
-      padding: 8px 14px; border-radius: 999px;
-      background: var(--glass); border: 1px solid var(--glass-border);
-      font-size: 14px;
-      transition: background .25s, transform .25s;
-    }
-    .tag:hover { background: rgba(124, 92, 255, 0.25); transform: scale(1.06); }
-
-    .contact {
-      text-align: center;
-      padding: 40px 24px;
-      border-radius: 24px;
-      background: var(--glass);
-      border: 1px solid var(--glass-border);
-    }
-    .contact p { color: var(--muted); margin-bottom: 20px; }
-
-    footer { text-align: center; color: var(--muted); font-size: 13px; padding: 30px 0 10px; position: relative; z-index: 1; }
-
-    /* ===== 7. Появление блоков при прокрутке ===== */
-    .reveal { opacity: 0; transform: translateY(40px); transition: opacity .9s ease, transform .9s ease; }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    /* ===== 8. Уважение к настройке «меньше движения» ===== */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation: none !important; transition: none !important; }
-      .reveal { opacity: 1; transform: none; }
-    }
-  </style>
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px) {
+    header { padding-top: 20px; }
+    nav a:not(:last-child) { display: none; }
+    .hero { grid-template-columns: 1fr; padding-top: 100px; gap: 28px; }
+    .hero-main { order: -1; }
+    .caps { font-size: 13px; }
+    .word { font-size: 24vw; justify-content: flex-start; margin-right: 0; }
+    .word { margin-bottom: .95em; }
+    .hero-name { margin-top: 0; }
+    .hero-side { gap: 22px; }
+    .about { display: block; padding: 80px var(--gutter); }
+    .about .t-big { display: inline-block; font-size: 17vw; margin-right: .12em; }
+    .about-text, .about-note { margin-top: 32px; text-align: left; }
+    .row { grid-template-columns: 1fr; gap: 10px; }
+    .cta { min-height: auto; display: flex; flex-direction: column; align-items: center; gap: 0; padding: 80px var(--gutter) 40px; }
+    .mark { width: 64vw; order: 1; margin: 40px 0; }
+    .cta-title { position: relative; left: auto; top: auto; transform: none; order: 2; font-size: 14vw; margin-top: -26vw; white-space: normal; text-align: center; }
+    .skill { position: static; font-size: 22px; order: 3; margin-top: 10px; text-align: center !important; }
+    .skill.s7, .skill.s8 { display: none; }
+  }
+</style>
 </head>
-
 <body>
-  <!-- Фон: светящиеся пятна -->
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
 
-  <main>
-    <!-- Первый экран -->
-    <section class="hero">
-      <div class="avatar">СС</div>
-      <span class="badge"><span class="dot"></span> Открыт к предложениям</span>
-      <h1>Сергей Саламатов</h1>
-      <p class="role">Я <span class="typed"></span><span class="cursor"></span></p>
-      <div class="buttons">
-        <a class="btn primary" href="#contact">Связаться</a>
-        <a class="btn" href="#about">Обо мне</a>
+<canvas id="bg" aria-hidden="true"></canvas>
+<a class="skip" href="#about">К содержанию</a>
+
+<header>
+  <a href="#top" class="logo" aria-label="Наверх">СС</a>
+  <nav>
+    <a href="#about">Обо мне</a>
+    <a href="#exp">Опыт</a>
+    <a href="#skills">Навыки</a>
+    <a href="#contact">Контакты</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <div class="hero-side">
+      <div class="rv">
+        <p class="side-title">14 лет в IT</p>
+        <p class="caps">Сопровождение бизнес-критичных приложений, разбор инцидентов по логам и SQL, поиск первопричин. Чтобы системы работали, а пользователи о них не думали.</p>
       </div>
-      <div class="scroll-hint">↓ листай вниз</div>
-    </section>
+      <div class="rv">
+        <p class="side-title">citibank · application manager</p>
+        <p class="caps">Портфель из 7 банковских приложений и хранилищ на MS SQL, интеграции со СМЭВ — обмен с ФНС и ФССП. Путь от инженера поддержки до владельца систем.</p>
+      </div>
+      <div class="rv">
+        <p class="side-title">ai и автоматизация</p>
+        <p class="caps">Использую AI, чтобы убирать рутину из поддержки, и делаю сайты для малого бизнеса.</p>
+      </div>
+    </div>
 
-    <!-- Обо мне -->
-    <section id="about" class="reveal">
-      <h2>Обо мне</h2>
-      <div class="grid">
-        <div class="card">
-          <div class="icon">🛠️</div>
-          <h3>14 лет в ИТ</h3>
-          <p>Сопровождение бизнес-критичных приложений: инциденты, диагностика по логам, стабильная работа систем для пользователей.</p>
+    <div class="hero-main">
+      <div class="word display" aria-label="Support">
+        <span>S</span><span>U</span><span>P</span><span>P</span>
+        <i class="pill" aria-hidden="true"><img class="robot" src="Photos/robot-hero.png" width="1000" height="1019" alt="" fetchpriority="high"></i>
+        <span>R</span><span>T</span>
+      </div>
+      <div class="hero-name">
+        <div>
+          <h1>Сергей Саламатов</h1>
+          <p class="caps">Application Support · Application Manager · Тюмень, удалённо</p>
         </div>
-        <div class="card">
-          <div class="icon">🏦</div>
-          <h3>Citibank</h3>
-          <p>Путь от инженера поддержки до Application Manager. Отвечал за интеграции со СМЭВ: обмен данными с ФНС и ФССП.</p>
-        </div>
-        <div class="card">
-          <div class="icon">🤖</div>
-          <h3>ИИ и автоматизация</h3>
-          <p>Изучаю ИИ и применяю его на практике: автоматизирую рутину и создаю сайты для малого бизнеса.</p>
-        </div>
+        <a href="#contact" class="btn"><span class="dot"></span>Открыт к предложениям</a>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Навыки -->
-    <section class="reveal">
-      <h2>Навыки</h2>
-      <div class="tags">
-        <span class="tag">SQL / MS SQL</span>
-        <span class="tag">Application Support</span>
-        <span class="tag">Управление инцидентами</span>
-        <span class="tag">Jira</span>
-        <span class="tag">ServiceNow</span>
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <h2 class="sr-only">Что я умею делать?</h2>
+    <div class="t-big display t-what rv" aria-hidden="true">Что</div>
+    <div class="t-big display t-i rv" aria-hidden="true">Я</div>
+    <div class="t-big display t-do rv" aria-hidden="true">умею</div>
+    <div class="t-big display white rv" aria-hidden="true">делать</div>
+    <div class="t-big display t-q rv" aria-hidden="true">?</div>
 
-        <span class="tag">Работа со стейкхолдерами</span>
-        <span class="tag">Английский свободно</span>
-        <span class="tag">Автоматизация с ИИ</span>
-      </div>
-    </section>
+    <div class="about-note n1 rv">
+      <h3>банк и госинтеграции</h3>
+      <p class="caps">Отвечал за 7 приложений и хранилища данных на MS SQL в Citibank, включая интеграции со СМЭВ. Ежедневно контролировал доступность, производительность и место на серверах. В проекте локализации банка — миграция и восстановление работоспособности всех 7 приложений.</p>
+    </div>
 
-    <!-- Контакты -->
-    <section id="contact" class="contact reveal">
-      <h2>Давай поговорим</h2>
-      <p>Ищу роль в Application Support или Application Management. Открыт к проектам по автоматизации и созданию сайтов.</p>
-      <div class="buttons">
-        <!-- ЗАМЕНИ ссылки ниже на свои -->
-        <a class="btn primary" href="mailto:ssalamatov72@gmail.com">Написать на почту</a>
-        <a class="btn" href="https://t.me/serj_salamatov" target="_blank">Telegram</a>
-      </div>
-    </section>
-  </main>
+    <div class="about-text rv">
+      <p>14 лет в IT, последние четыре года — в Citibank: прошёл путь от инженера технической поддержки до Application Manager.</p>
+      <p>Искал первопричины инцидентов и настроил мониторинг критичных приложений на MS SQL — инцидентов стало на 30% меньше за год. Писал планы восстановления, координировал ежегодные тесты COB, закрывал требования ИБ и замечания аудитов без просрочек.</p>
+      <p>До банка — поддержка корпоративных клиентов Европы и Азии на английском в NetWrix и старший смены из 10–15 инженеров в Шлюмберже.</p>
+    </div>
 
-  <footer>© 2026 Сергей Саламатов · Тюмень</footer>
+    <div class="about-note n2 rv">
+      <h3>надёжность и риски</h3>
+      <p class="caps">Application Recovery Plan, тесты непрерывности бизнеса, Checkmarx и Black Duck, патчи, ревью с офицером ИБ. Планы замены устаревших компонентов (EOL/EOVS) и исключения по рискам под контролем сроков.</p>
+    </div>
 
-  <script>
-    // 1. Эффект печатной машинки: фразы по очереди печатаются и стираются
-    const phrases = [
-      "инженер Application Support",
-      "Application Manager",
-      "автоматизирую с помощью ИИ",
-      "делаю сайты для бизнеса"
-    ];
-    const typed = document.querySelector(".typed");
-    let p = 0, c = 0, deleting = false;
+    <div class="about-note n3 rv">
+      <h3>люди и процессы</h3>
+      <p class="caps">Координирую бизнес, разработку, инфраструктуру и поставщиков при инцидентах и изменениях. Планирую обновления и UAT, обучаю первую линию. Английский C2, ITIL Foundation.</p>
+    </div>
+  </section>
 
-    function type() {
-      const word = phrases[p];
-      typed.textContent = word.slice(0, c);
-      if (!deleting && c < word.length) { c++; setTimeout(type, 70); }
-      else if (!deleting) { deleting = true; setTimeout(type, 1600); }
-      else if (c > 0) { c--; setTimeout(type, 35); }
-      else { deleting = false; p = (p + 1) % phrases.length; setTimeout(type, 300); }
-    }
-    type();
+  <!-- EXPERIENCE -->
+  <section class="exp" id="exp">
+    <div class="sec-head">
+      <h2 class="display rv">Опыт</h2>
+      <p class="caps rv">2012 — 2026 · банк, международный IT, внедрения</p>
+    </div>
 
-    // 2. Частицы: создаём 30 точек со случайным размером, позицией и скоростью
-    for (let i = 0; i < 30; i++) {
-      const dot = document.createElement("div");
-      dot.className = "particle";
-      const size = Math.random() * 3 + 1;
-      dot.style.width = dot.style.height = size + "px";
-      dot.style.left = Math.random() * 100 + "vw";
-      dot.style.animationDuration = (Math.random() * 12 + 10) + "s";
-      dot.style.animationDelay = (Math.random() * -20) + "s";
-      document.body.appendChild(dot);
-    }
+    <div class="row rv">
+      <div class="years">2025—2026</div>
+      <div><h3>Citibank</h3><p class="caps role">Application Manager · Москва</p></div>
+      <ul>
+        <li>Портфель из 7 приложений и хранилищ на MS SQL, интеграции со СМЭВ (ФНС, ФССП)</li>
+        <li>Планы восстановления и ежегодные тесты COB, требования ИБ без просрочек</li>
+        <li>Реестр приложений, сопровождение на внутренних аудитах — все замечания закрыты в срок</li>
+      </ul>
+    </div>
+    <div class="row rv">
+      <div class="years">2022—2025</div>
+      <div><h3>Citibank</h3><p class="caps role">Инженер технической поддержки</p></div>
+      <ul>
+        <li>Инциденты в SimpleOne: диагностика, восстановление, эскалация</li>
+        <li>Problem management и предотвращение повторяющихся сбоев</li>
+        <li>Мониторинг критичных приложений: −30% инцидентов за год</li>
+      </ul>
+    </div>
+    <div class="row rv">
+      <div class="years">2022</div>
+      <div><h3>NetWrix</h3><p class="caps role">Специалист техподдержки · клиенты Европы и Азии</p></div>
+      <ul>
+        <li>Поддержка на английском, AD, Exchange, SharePoint, SQL, Office 365, VMware</li>
+        <li>В числе лучших специалистов по оценкам клиентов</li>
+      </ul>
+    </div>
+    <div class="row rv">
+      <div class="years">2016—2021</div>
+      <div><h3>Шлюмберже</h3><p class="caps role">Специалист техподдержки · старший смены</p></div>
+      <ul>
+        <li>Remedy и ServiceNow, поддержка на русском и английском</li>
+        <li>С 2018 — старший смены из 10–15 инженеров, обучение новичков</li>
+      </ul>
+    </div>
+    <div class="row rv">
+      <div class="years">2012—2016</div>
+      <div><h3>«Арсенал Плюс», «Мастер»</h3><p class="caps role">Инженер</p></div>
+      <ul>
+        <li>Внедрение ИС и модернизация инфраструктуры заказчиков, в т.ч. «Транснефть-Сибирь»</li>
+        <li>Серверы, СХД, Windows Server, Exchange, миграция пользователей в новый домен</li>
+      </ul>
+    </div>
+  </section>
 
-    // 3. Плавное появление блоков, когда они попадают на экран
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("visible"); });
-    }, { threshold: 0.15 });
-    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
-  </script>
+  <!-- SKILLS / CTA -->
+  <section class="cta" id="skills">
+    <div class="skill s1 rv">SQL /<br>MS SQL</div>
+    <div class="skill s2 r rv">Incident &amp;<br>Problem Mgmt</div>
+    <div class="skill s3 rv">СМЭВ ·<br>ФНС · ФССП</div>
+    <div class="skill s4 r rv">ITIL<br>Foundation</div>
+    <div class="skill s5 rv">ServiceNow ·<br>SimpleOne · Jira</div>
+    <div class="skill s6 r rv">English<br>C2</div>
+    <div class="skill s7 rv">COB / DR</div>
+    <div class="skill s8 rv">AI-автоматизация</div>
+    <div class="mark" aria-hidden="true"></div>
+    <h2 class="cta-title display">Нужна<br>поддержка?</h2>
+  </section>
+
+  <section class="contact" id="contact">
+    <p class="caps">Ищу роль Application Support или Application Manager. Открыт к проектам по автоматизации и созданию сайтов. Работаю из Тюмени удалённо, разница с Москвой 2 часа.</p>
+    <div class="contact-links">
+      <a class="btn solid" href="mailto:ssalamatov72@gmail.com">ssalamatov72@gmail.com</a>
+      <a class="btn" href="https://t.me/serj_salamatov" target="_blank" rel="noopener">Telegram <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span class="caps">© 2026 Сергей Саламатов</span>
+  <span class="caps">Тюмень · UTC+5</span>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.rv').forEach((el) => io.observe(el));
+
+  // shader background: domain-warped noise shaded as liquid metal, plus twinkling stars
+  (() => {
+    const canvas = document.getElementById('bg');
+    const gl = canvas.getContext('webgl', { antialias: false, alpha: false, powerPreference: 'low-power' });
+    if (!gl) return;
+
+    const vert = 'attribute vec2 a;void main(){gl_Position=vec4(a,0.,1.);}';
+    const frag = `
+      precision mediump float;
+      uniform vec2 u_res; uniform float u_time; uniform vec2 u_mouse; uniform float u_scroll;
+      float hash(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
+      float noise(vec2 p){
+        vec2 i=floor(p), f=fract(p); f=f*f*(3.-2.*f);
+        return mix(mix(hash(i),hash(i+vec2(1,0)),f.x), mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x), f.y);
+      }
+      float fbm(vec2 p){
+        float v=0., a=.5; mat2 m=mat2(1.6,1.2,-1.2,1.6);
+        for(int i=0;i<4;i++){ v+=a*noise(p); p=m*p; a*=.5; }
+        return v;
+      }
+      float field(vec2 p, float t){
+        vec2 q=vec2(fbm(p+vec2(0.,t*.06)), fbm(p+vec2(5.2,1.3)-t*.05));
+        return fbm(p+2.6*q+vec2(1.7,9.2)+t*.03);
+      }
+      void main(){
+        vec2 uv=gl_FragCoord.xy/u_res;
+        vec2 p=(gl_FragCoord.xy-.5*u_res)/u_res.y;
+        vec2 m=(u_mouse-.5*u_res)/u_res.y;
+        vec2 dm=p-m; p+=dm*.22*exp(-dot(dm,dm)*7.);          // metal bulges around the cursor
+        p.y+=u_scroll;
+        float t=u_time*.5; vec2 sp=p*.9;
+
+        float h=field(sp,t), e=.02;
+        float hx=field(sp+vec2(e,0.),t), hy=field(sp+vec2(0.,e),t);
+        vec3 n=normalize(vec3(h-hx, h-hy, e*.5));
+        vec3 l=normalize(vec3(-.35,.55,.75));
+        float diff=max(dot(n,l),0.);
+        float spec=pow(max(dot(reflect(-l,n),vec3(0,0,1)),0.),18.);
+        float fres=pow(1.-n.z,2.);
+        float chrome=pow(.5+.5*cos(h*13.+t*.8),5.);         // flowing reflection bands
+        float metal=(.1*diff+.7*spec+.25*fres+.35*chrome)*(.3+.7*smoothstep(.2,.8,h));
+
+        vec2 sg=p*42.; vec2 id=floor(sg); vec2 f=fract(sg)-.5;
+        float hs=hash(id);
+        vec2 off=(vec2(hash(id+1.3),hash(id+7.1))-.5)*.6;
+        float tw=.4+.6*sin(u_time*1.4+hs*80.);
+        float star=step(.975,hs)*(smoothstep(.13,0.,length(f-off))+.25*smoothstep(.35,0.,length(f-off)))*tw;
+
+        float vig=smoothstep(1.25,.15,length(uv-.5)*1.35);
+        float c=.03+metal*.42*vig+star*.8*(1.-metal);
+        gl_FragColor=vec4(vec3(c)*vec3(.96,.98,1.),1.);
+      }`;
+
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, vert));
+    gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, frag));
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return;
+    gl.useProgram(prog);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'a');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    const u = (n) => gl.getUniformLocation(prog, n);
+    const uRes = u('u_res'), uTime = u('u_time'), uMouse = u('u_mouse'), uScroll = u('u_scroll');
+
+    // render below screen resolution: the field is soft, so this is nearly invisible and much cheaper
+    const scale = innerWidth < 900 ? 0.4 : 0.55;
+    let mx = innerWidth / 2, my = innerHeight / 3, cx = mx, cy = my;
+    const resize = () => {
+      canvas.width = Math.round(innerWidth * scale);
+      canvas.height = Math.round(innerHeight * scale);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+    };
+    resize();
+    addEventListener('resize', resize);
+    addEventListener('pointermove', (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
+
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const start = performance.now();
+    let last = 0, raf = 0;
+    const draw = (now) => {
+      raf = still ? 0 : requestAnimationFrame(draw);
+      if (now - last < 33) return;                       // ~30 fps is plenty for a slow background
+      last = now;
+      cx += (mx - cx) * 0.06; cy += (my - cy) * 0.06;
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, (now - start) / 1000);
+      gl.uniform2f(uMouse, cx * scale, (innerHeight - cy) * scale);
+      gl.uniform1f(uScroll, scrollY / innerHeight * 0.25); // gentle parallax while scrolling
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    };
+    if (still) draw(performance.now() + 1000);
+    else raf = requestAnimationFrame(draw);
+    if (still) addEventListener('scroll', () => requestAnimationFrame((t) => { last = 0; draw(t + 1000); }), { passive: true });
+    document.addEventListener('visibilitychange', () => {
+      if (still) return;
+      if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
+      else if (!raf) raf = requestAnimationFrame(draw);
+    });
+  })();
+
+  // cursor glow: eases toward the pointer, only for mouse users without reduced motion
+  const hero = document.querySelector('.hero');
+  const glow = hero.querySelector('.cursor-glow');
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let tx = 0, ty = 0, x = 0, y = 0, raf = 0;
+    const tick = () => {
+      x += (tx - x) * 0.14; y += (ty - y) * 0.14;
+      glow.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+      raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.5 ? requestAnimationFrame(tick) : 0;
+    };
+    hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      tx = e.clientX - r.left; ty = e.clientY - r.top;
+      if (!hero.classList.contains('lit')) { x = tx; y = ty; hero.classList.add('lit'); }
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+    hero.addEventListener('pointerleave', () => hero.classList.remove('lit'));
+  }
+</script>
 </body>
 </html>
