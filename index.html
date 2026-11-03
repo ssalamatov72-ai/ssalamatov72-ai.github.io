@@ -19,7 +19,7 @@
     --bg-2: #1b1f1f;
     --ink: #f2f2f0;
     --ink-2: #a7aaa8;
-    --ink-3: #5c605e;
+    --ink-3: #8a8d8b;
     --line: rgba(255,255,255,.16);
     --glow: #ffffff;
     --display: "Oswald", "Arial Narrow", sans-serif;
@@ -65,7 +65,18 @@
     width: 44px; height: 44px; border-radius: 12px; background: var(--ink); color: var(--bg);
     display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 19px; letter-spacing: -.02em;
   }
-  nav { display: flex; gap: clamp(18px, 5vw, 72px); }
+  nav { display: flex; gap: clamp(18px, 5vw, 72px); margin-left: auto; }
+  .bg-toggle {
+    width: 44px; height: 44px; margin-left: clamp(12px, 3vw, 32px); flex: none;
+    display: grid; place-items: center; border-radius: 50%;
+    background: rgba(11,12,12,.5); border: 1px solid var(--line); color: var(--ink-2); cursor: pointer;
+    transition: color .2s, border-color .2s;
+  }
+  .bg-toggle:hover { color: var(--ink); border-color: var(--ink-2); }
+  .bg-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .bg-toggle svg { width: 16px; height: 16px; }
+  .bg-toggle .i-play, .bg-toggle[aria-pressed="true"] .i-pause { display: none; }
+  .bg-toggle[aria-pressed="true"] .i-play { display: block; }
   nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); transition: color .2s, text-shadow .2s; }
   nav a:hover, nav a:first-child { color: var(--ink); text-shadow: 0 0 14px rgba(255,255,255,.7); }
 
@@ -104,8 +115,7 @@
   .pill::before {
     content: ""; position: absolute; left: 50%; top: 42%; width: 1.1em; height: 1.1em; border-radius: 50%;
     transform: translate(-50%, -50%);
-    background: radial-gradient(closest-side, rgba(255,255,255,.9), rgba(255,255,255,.4) 38%, rgba(255,255,255,.1) 68%, transparent);
-    animation: halo 5s ease-in-out infinite;
+    background: radial-gradient(closest-side, rgba(255,255,255,.85), rgba(255,255,255,.38) 38%, rgba(255,255,255,.1) 68%, transparent);
   }
   /* brighter backlight that fades in when the robot is hovered */
   .pill::after {
@@ -123,7 +133,6 @@
     -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 96%);
     mask-image: linear-gradient(to bottom, #000 62%, transparent 96%);
   }
-  @keyframes halo { 50% { opacity: .75; } }
   @media (hover: hover) {
     .pill:hover::after { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     .pill:hover .robot { filter: saturate(.3) contrast(1.08) drop-shadow(0 0 .03em rgba(255,255,255,.7)); }
@@ -200,13 +209,11 @@
     background: #fff;
     box-shadow: 0 0 40px #fff, 0 0 120px rgba(255,255,255,.55), 0 0 260px rgba(255,255,255,.25);
     display: grid; place-items: center;
-    animation: breathe2 6s ease-in-out infinite;
   }
   .mark::before, .mark::after {
     content: ""; position: absolute; top: 18%; bottom: 0; width: 13%; border-radius: 999px 999px 0 0; background: #d9dcdb;
   }
   .mark::before { left: 30%; } .mark::after { right: 30%; }
-  @keyframes breathe2 { 50% { box-shadow: 0 0 50px #fff, 0 0 160px rgba(255,255,255,.65), 0 0 320px rgba(255,255,255,.3); } }
   .cta-title {
     position: absolute; left: 50%; top: 50%; transform: translate(-42%, -10%); z-index: 3;
     font-size: clamp(52px, 9vw, 150px); color: #fff; mix-blend-mode: difference; white-space: nowrap;
@@ -234,7 +241,6 @@
   .rv.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) {
     .rv { opacity: 1; transform: none; transition: none; }
-    .pill::before, .mark { animation: none; }
     html { scroll-behavior: auto; }
   }
 
@@ -274,6 +280,10 @@
     <a href="#skills">Навыки</a>
     <a href="#contact">Контакты</a>
   </nav>
+  <button class="bg-toggle" type="button" aria-pressed="false" aria-label="Остановить анимацию фона" hidden>
+    <svg class="i-pause" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="3.5" y="2.5" width="3" height="11" rx="1"/><rect x="9.5" y="2.5" width="3" height="11" rx="1"/></svg>
+    <svg class="i-play" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 2.8v10.4c0 .6.7 1 1.2.7l8.2-5.2a.8.8 0 0 0 0-1.4L5.7 2.1c-.5-.3-1.2.1-1.2.7z"/></svg>
+  </button>
 </header>
 
 <main id="top">
@@ -477,7 +487,9 @@
         float star=step(.975,hs)*(smoothstep(.13,0.,length(f-off))+.25*smoothstep(.35,0.,length(f-off)))*tw;
 
         float vig=smoothstep(1.25,.15,length(uv-.5)*1.35);
-        float c=.03+metal*.42*vig+star*.8*(1.-metal);
+        // soft-capped near .24 so --ink-2 text keeps 4.5:1 contrast even on the brightest highlight
+        float c=.03+.22*(1.-exp(-metal*2.2*vig));
+        c=max(c, star*.6*(1.-metal));
         gl_FragColor=vec4(vec3(c)*vec3(.96,.98,1.),1.);
       }`;
 
@@ -509,28 +521,50 @@
     addEventListener('resize', resize);
     addEventListener('pointermove', (e) => { mx = e.clientX; my = e.clientY; }, { passive: true });
 
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // frozen when the OS asks for reduced motion, or when the viewer pauses it with the header button
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const toggle = document.querySelector('.bg-toggle');
+    let paused = reduced;
+    if (!reduced) {
+      try { paused = localStorage.getItem('bg-paused') === '1'; } catch (e) {}
+      toggle.hidden = false;
+    }
     const start = performance.now();
-    let last = 0, raf = 0;
-    const draw = (now) => {
-      raf = still ? 0 : requestAnimationFrame(draw);
-      if (now - last < 33) return;                       // ~30 fps is plenty for a slow background
-      last = now;
+    let elapsed = 1, last = 0, raf = 0;
+    const render = () => {
       cx += (mx - cx) * 0.06; cy += (my - cy) * 0.06;
       gl.uniform2f(uRes, canvas.width, canvas.height);
-      gl.uniform1f(uTime, (now - start) / 1000);
+      gl.uniform1f(uTime, elapsed);
       gl.uniform2f(uMouse, cx * scale, (innerHeight - cy) * scale);
       gl.uniform1f(uScroll, scrollY / innerHeight * 0.25); // gentle parallax while scrolling
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     };
-    if (still) draw(performance.now() + 1000);
-    else raf = requestAnimationFrame(draw);
-    if (still) addEventListener('scroll', () => requestAnimationFrame((t) => { last = 0; draw(t + 1000); }), { passive: true });
-    document.addEventListener('visibilitychange', () => {
-      if (still) return;
-      if (document.hidden) { cancelAnimationFrame(raf); raf = 0; }
-      else if (!raf) raf = requestAnimationFrame(draw);
+    const loop = (now) => {
+      raf = requestAnimationFrame(loop);
+      if (now - last < 33) return;                       // ~30 fps is plenty for a slow background
+      last = now;
+      elapsed = (now - start) / 1000;
+      render();
+    };
+    const play = () => { if (!raf && !paused && !document.hidden) raf = requestAnimationFrame(loop); };
+    const stop = () => { cancelAnimationFrame(raf); raf = 0; };
+    const sync = () => {
+      toggle.setAttribute('aria-pressed', String(paused));
+      toggle.setAttribute('aria-label', paused ? 'Запустить анимацию фона' : 'Остановить анимацию фона');
+    };
+
+    render();
+    sync();
+    play();
+    addEventListener('resize', () => { if (paused) render(); });
+    addEventListener('scroll', () => { if (paused) requestAnimationFrame(render); }, { passive: true });
+    toggle.addEventListener('click', () => {
+      paused = !paused;
+      try { localStorage.setItem('bg-paused', paused ? '1' : '0'); } catch (e) {}
+      sync();
+      paused ? stop() : play();
     });
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : play()));
   })();
 
   // cursor glow: eases toward the pointer, only for mouse users without reduced motion
